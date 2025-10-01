@@ -12,12 +12,6 @@ return {
   --   "BufReadPre path/to/my-vault/*.md",
   --   "BufNewFile path/to/my-vault/*.md",
   -- },
-  dependencies = {
-    -- Required.
-    "nvim-lua/plenary.nvim",
-
-    -- see below for full list of optional dependencies 👇
-  },
       keys = {
       { "gf", "<cmd>Obsidian follow<cr>", ft = "markdown", desc = "Follow Obsidian link" },
       { "<leader>Oo", "<cmd>Obsidian open<cr>", ft = "markdown", desc = "Open in Obsidian" },
