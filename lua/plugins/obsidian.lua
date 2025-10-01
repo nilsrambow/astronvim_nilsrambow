@@ -1,6 +1,6 @@
 ---@type LazySpec
 return {
-  "epwalsh/obsidian.nvim",
+  "obsidian-nvim/obsidian.nvim",
   version = "*",  -- recommended, use latest release instead of latest commit
   lazy = false,
   ft = "markdown",
@@ -18,6 +18,17 @@ return {
 
     -- see below for full list of optional dependencies 👇
   },
+      keys = {
+      { "gf", "<cmd>ObsidianFollowLink<cr>", ft = "markdown", desc = "Follow Obsidian link" },
+      { "<leader>Oo", "<cmd>ObsidianOpen<cr>", ft = "markdown", desc = "Open in Obsidian" },
+      { "<leader>On", "<cmd>ObsidianNew<cr>", ft = "markdown", desc = "New Obsidian note" },
+      { "<leader>Os", "<cmd>ObsidianSearch<cr>", ft = "markdown", desc = "Search Obsidian" },
+      { "<leader>Oq", "<cmd>ObsidianQuickSwitch<cr>", ft = "markdown", desc = "Quick switch" },
+      { "<leader>Ob", "<cmd>ObsidianBacklinks<cr>", ft = "markdown", desc = "Show backlinks" },
+      { "<leader>Ot", "<cmd>ObsidianToday<cr>", ft = "markdown", desc = "Today's note" },
+      { "<leader>Oy", "<cmd>ObsidianYesterday<cr>", ft = "markdown", desc = "Yesterday's note" },
+      { "<leader>Ol", "<cmd>ObsidianLinks<cr>", ft = "markdown", desc = "Show links" },
+    },
     opts = {
     workspaces = {
       {
@@ -25,26 +36,27 @@ return {
         path = "~/vaults/personal",
       },
     },
+          checkbox = {
+        order = { " ", "x", ">", "~", "!" },  -- Define the cycling order
+        chars = {
+          [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+          ["x"] = { char = "", hl_group = "ObsidianDone" },
+          [">"] = { char = "", hl_group = "ObsidianRightArrow" },
+          ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
+          ["!"] = { char = "", hl_group = "ObsidianImportant" },
+        },
+      },
           -- Enable UI enhancements
       ui = {
         enable = true,  -- Set to false to disable all UI features
         update_debounce = 200,  -- Update delay in milliseconds
         max_file_length = 5000,  -- Disable UI for files longer than this
         
-        -- Checkboxes with different states
-        checkboxes = {
-          [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-          ["x"] = { char = "󰱒", hl_group = "ObsidianDone" },
-          [">"] = { char = "󰧛", hl_group = "ObsidianRightArrow" },
-          ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-          ["!"] = { char = "", hl_group = "ObsidianImportant" },
-        },
-        
         -- Bullets for lists
         bullets = { char = "•", hl_group = "ObsidianBullet" },
         
         -- External link icon
-        external_link_icon = { char = "󱥫", hl_group = "ObsidianExtLinkIcon" },
+        external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
         
         -- Reference text (for footnotes, etc.)
         reference_text = { hl_group = "ObsidianRefText" },
