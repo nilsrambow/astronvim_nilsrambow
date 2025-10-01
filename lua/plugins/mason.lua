@@ -9,6 +9,7 @@ return {
       ensure_installed = {
         -- install language servers
         "lua-language-server",
+        "markdown-oxide",
 
         -- install formatters
         "stylua",
