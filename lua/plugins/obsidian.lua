@@ -19,17 +19,18 @@ return {
     -- see below for full list of optional dependencies 👇
   },
       keys = {
-      { "gf", "<cmd>ObsidianFollowLink<cr>", ft = "markdown", desc = "Follow Obsidian link" },
-      { "<leader>Oo", "<cmd>ObsidianOpen<cr>", ft = "markdown", desc = "Open in Obsidian" },
-      { "<leader>On", "<cmd>ObsidianNew<cr>", ft = "markdown", desc = "New Obsidian note" },
-      { "<leader>Os", "<cmd>ObsidianSearch<cr>", ft = "markdown", desc = "Search Obsidian" },
-      { "<leader>Oq", "<cmd>ObsidianQuickSwitch<cr>", ft = "markdown", desc = "Quick switch" },
-      { "<leader>Ob", "<cmd>ObsidianBacklinks<cr>", ft = "markdown", desc = "Show backlinks" },
-      { "<leader>Ot", "<cmd>ObsidianToday<cr>", ft = "markdown", desc = "Today's note" },
-      { "<leader>Oy", "<cmd>ObsidianYesterday<cr>", ft = "markdown", desc = "Yesterday's note" },
-      { "<leader>Ol", "<cmd>ObsidianLinks<cr>", ft = "markdown", desc = "Show links" },
+      { "gf", "<cmd>Obsidian follow<cr>", ft = "markdown", desc = "Follow Obsidian link" },
+      { "<leader>Oo", "<cmd>Obsidian open<cr>", ft = "markdown", desc = "Open in Obsidian" },
+      { "<leader>On", "<cmd>Obsidian new<cr>", ft = "markdown", desc = "New Obsidian note" },
+      { "<leader>Os", "<cmd>Obsidian search<cr>", ft = "markdown", desc = "Search Obsidian" },
+      { "<leader>Oq", "<cmd>Obsidian quick-switch<cr>", ft = "markdown", desc = "Quick switch" },
+      { "<leader>Ob", "<cmd>Obsidian backlinks<cr>", ft = "markdown", desc = "Show backlinks" },
+      { "<leader>Ot", "<cmd>Obsidian today<cr>", ft = "markdown", desc = "Today's note" },
+      { "<leader>Oy", "<cmd>Obsidian yesterday<cr>", ft = "markdown", desc = "Yesterday's note" },
+      { "<leader>Ol", "<cmd>Obsidian links<cr>", ft = "markdown", desc = "Show links" },
     },
     opts = {
+    legacy_commands = false,
     workspaces = {
       {
         name = "personal",
