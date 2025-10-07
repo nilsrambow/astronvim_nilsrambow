@@ -96,7 +96,7 @@ return {
       folder = "daily", -- Where daily notes are stored
       date_format = "%Y-%m-%d",
       alias_format = "%B %-d, %Y",
-      template = "templates/daily.md" -- Path to your template (relative to vault root)
+      template = "daily.md" -- Path to your template (relative to vault root)
       },
 
     templates = {
