@@ -73,6 +73,13 @@ return {
 
         -- setting a mapping to false will disable it
         -- ["<C-S>"] = false,
+        ["<leader>H"] = { function() 
+          local hostname = vim.loop.os_gethostname()
+          local username = os.getenv("USER") or os.getenv("USERNAME") or "unkown"
+          vim.notify("Your are loggd in as " .. username .. "@" .. hostname)
+        end,
+        desc = "Show user and host info",
+        },
       },
     },
   },
