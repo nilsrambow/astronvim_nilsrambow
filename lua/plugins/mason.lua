@@ -10,6 +10,8 @@ return {
         -- install language servers
         "lua-language-server",
         "markdown-oxide",
+        "pyright",
+        "ruff",
 
         -- install formatters
         "stylua",
