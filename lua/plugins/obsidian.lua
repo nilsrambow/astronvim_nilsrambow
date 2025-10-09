@@ -33,6 +33,15 @@ return {
         ["!"] = { char = "", hl_group = "ObsidianImportant" },
       },
     },
+    note_id_func = function(title)
+      if not title then
+        return tostring(os.time())
+      end
+      return title
+        :gsub(" ","-")
+        :gsub("[^A-Za-z0-9%-]", "")
+        :lower()
+      end,
     ui = {
       enable = true,  -- Set to false to disable all UI features
       update_debounce = 200,  -- Update delay in milliseconds
