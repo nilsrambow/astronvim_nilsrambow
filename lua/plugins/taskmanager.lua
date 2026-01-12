@@ -124,11 +124,55 @@ end
 -- Function to parse due date from command
 local function parse_due_date(args)
     for i, arg in ipairs(args) do
-        if arg:lower():match "^due:%d%d%d%d%-%d%d?%-%d%d?$" then
+        if arg:lower():match "^due:" then
             local due_str = arg:lower():gsub("due:", "")
-            local year, month, day = due_str:match "^(%d+)%-(%d+)%-(%d+)$"
-            if year and month and day then
-                return string.format("%s-%s-%s", year, month:gsub("^%d$", "0%1"), day:gsub("^%d$", "0%1"))
+
+            -- Handle smart date keywords
+            if due_str == "today" then
+                return os.date "%Y-%m-%d"
+            elseif due_str == "tomorrow" then
+                return os.date("%Y-%m-%d", os.time() + 86400)
+            elseif due_str == "monday" or due_str == "mon" then
+                local current_day = tonumber(os.date "%u") -- 1=Mon, 7=Sun
+                local days_until = (8 - current_day) % 7
+                if days_until == 0 then days_until = 7 end
+                return os.date("%Y-%m-%d", os.time() + days_until * 86400)
+            elseif due_str == "tuesday" or due_str == "tue" then
+                local current_day = tonumber(os.date "%u")
+                local days_until = (9 - current_day) % 7
+                if days_until == 0 then days_until = 7 end
+                return os.date("%Y-%m-%d", os.time() + days_until * 86400)
+            elseif due_str == "wednesday" or due_str == "wed" then
+                local current_day = tonumber(os.date "%u")
+                local days_until = (10 - current_day) % 7
+                if days_until == 0 then days_until = 7 end
+                return os.date("%Y-%m-%d", os.time() + days_until * 86400)
+            elseif due_str == "thursday" or due_str == "thu" then
+                local current_day = tonumber(os.date "%u")
+                local days_until = (11 - current_day) % 7
+                if days_until == 0 then days_until = 7 end
+                return os.date("%Y-%m-%d", os.time() + days_until * 86400)
+            elseif due_str == "friday" or due_str == "fri" then
+                local current_day = tonumber(os.date "%u")
+                local days_until = (12 - current_day) % 7
+                if days_until == 0 then days_until = 7 end
+                return os.date("%Y-%m-%d", os.time() + days_until * 86400)
+            elseif due_str == "saturday" or due_str == "sat" then
+                local current_day = tonumber(os.date "%u")
+                local days_until = (13 - current_day) % 7
+                if days_until == 0 then days_until = 7 end
+                return os.date("%Y-%m-%d", os.time() + days_until * 86400)
+            elseif due_str == "sunday" or due_str == "sun" then
+                local current_day = tonumber(os.date "%u")
+                local days_until = (14 - current_day) % 7
+                if days_until == 0 then days_until = 7 end
+                return os.date("%Y-%m-%d", os.time() + days_until * 86400)
+            elseif due_str:match "^%d%d%d%d%-%d%d?%-%d%d?$" then
+                -- Regular date format YYYY-MM-DD
+                local year, month, day = due_str:match "^(%d+)%-(%d+)%-(%d+)$"
+                if year and month and day then
+                    return string.format("%s-%s-%s", year, month:gsub("^%d$", "0%1"), day:gsub("^%d$", "0%1"))
+                end
             end
         end
     end
@@ -411,11 +455,9 @@ function M.add_task(args)
     local due_date = parse_due_date(args)
     local tags = parse_tags(args)
 
-    -- Rebuild description, excluding the due date and tags
+    -- Rebuild description, excluding the due date (smart keywords or regular dates) and tags
     for _, arg in ipairs(args) do
-        if not arg:lower():match "^due:%d%d%d%d%-%d%d?%-%d%d?$" and not arg:match "^%+.+" then
-            table.insert(description_parts, arg)
-        end
+        if not arg:lower():match "^due:" and not arg:match "^%+.+" then table.insert(description_parts, arg) end
     end
 
     local description = table.concat(description_parts, " ")
@@ -437,7 +479,8 @@ function M.add_task(args)
     write_tasks(tasks)
 
     local tags_info = tags and string.format(" [tags: %s]", table.concat(tags, ", ")) or ""
-    print(string.format("Task added: %s%s (UUID: %s)", description, tags_info, new_task.uuid))
+    local due_info = due_date and string.format(" [due: %s]", due_date) or ""
+    print(string.format("Task added: %s%s%s (UUID: %s)", description, tags_info, due_info, new_task.uuid))
 end
 
 -- Function to mark a task as done by display ID
@@ -667,12 +710,58 @@ vim.api.nvim_create_user_command("Task", function(opts)
 
         for i = cmd_index + 1, #args do
             local arg = args[i]
-            if arg:lower():match "^due:%d%d%d%d%-%d%d?%-%d%d?$" then
+            if arg:lower():match "^due:" then
                 local due_str = arg:lower():gsub("due:", "")
-                local year, month, day = due_str:match "^(%d+)%-(%d+)%-(%d+)$"
-                if year and month and day then
-                    modifications.due = string.format("%s-%s-%s", year, month:gsub("^%d$", "0%1"),
-                        day:gsub("^%d$", "0%1"))
+
+                -- Handle smart date keywords
+                if due_str == "today" then
+                    modifications.due = os.date "%Y-%m-%d"
+                elseif due_str == "tomorrow" then
+                    modifications.due = os.date("%Y-%m-%d", os.time() + 86400)
+                elseif due_str == "1w" then
+                    modifications.due = os.date("%Y-%m-%d", os.time() + 7 * 86400)
+                elseif due_str == "monday" or due_str == "mon" then
+                    local current_day = tonumber(os.date "%u")
+                    local days_until = (8 - current_day) % 7
+                    if days_until == 0 then days_until = 7 end
+                    modifications.due = os.date("%Y-%m-%d", os.time() + days_until * 86400)
+                elseif due_str == "tuesday" or due_str == "tue" then
+                    local current_day = tonumber(os.date "%u")
+                    local days_until = (9 - current_day) % 7
+                    if days_until == 0 then days_until = 7 end
+                    modifications.due = os.date("%Y-%m-%d", os.time() + days_until * 86400)
+                elseif due_str == "wednesday" or due_str == "wed" then
+                    local current_day = tonumber(os.date "%u")
+                    local days_until = (10 - current_day) % 7
+                    if days_until == 0 then days_until = 7 end
+                    modifications.due = os.date("%Y-%m-%d", os.time() + days_until * 86400)
+                elseif due_str == "thursday" or due_str == "thu" then
+                    local current_day = tonumber(os.date "%u")
+                    local days_until = (11 - current_day) % 7
+                    if days_until == 0 then days_until = 7 end
+                    modifications.due = os.date("%Y-%m-%d", os.time() + days_until * 86400)
+                elseif due_str == "friday" or due_str == "fri" then
+                    local current_day = tonumber(os.date "%u")
+                    local days_until = (12 - current_day) % 7
+                    if days_until == 0 then days_until = 7 end
+                    modifications.due = os.date("%Y-%m-%d", os.time() + days_until * 86400)
+                elseif due_str == "saturday" or due_str == "sat" then
+                    local current_day = tonumber(os.date "%u")
+                    local days_until = (13 - current_day) % 7
+                    if days_until == 0 then days_until = 7 end
+                    modifications.due = os.date("%Y-%m-%d", os.time() + days_until * 86400)
+                elseif due_str == "sunday" or due_str == "sun" then
+                    local current_day = tonumber(os.date "%u")
+                    local days_until = (14 - current_day) % 7
+                    if days_until == 0 then days_until = 7 end
+                    modifications.due = os.date("%Y-%m-%d", os.time() + days_until * 86400)
+                elseif due_str:match "^%d%d%d%d%-%d%d?%-%d%d?$" then
+                    -- Regular date format
+                    local year, month, day = due_str:match "^(%d+)%-(%d+)%-(%d+)$"
+                    if year and month and day then
+                        modifications.due = string.format("%s-%s-%s", year, month:gsub("^%d$", "0%1"),
+                            day:gsub("^%d$", "0%1"))
+                    end
                 end
             elseif arg:match "^%+.+" then
                 local tag = arg:sub(2)
